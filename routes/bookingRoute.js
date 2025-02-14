@@ -4,8 +4,10 @@ const router = express.Router();
 const Booking = require("../models/booking");
 const moment = require("moment");
 const Room = require("../models/room");
-const stripe = require("stripe")(process.env.STRIPE_KEY);
 const { v4: uuidv4 } = require('uuid');
+const Stripe = require('stripe');
+const stripe = new Stripe(process.env.STRIPE_KEY);
+
 
 router.post("/bookroom", async (req, res) => {
     const {
