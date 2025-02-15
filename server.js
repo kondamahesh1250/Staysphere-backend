@@ -15,10 +15,10 @@ const userRoute = require("./routes/userRouter");
 const bookingRoute = require("./routes/bookingRoute");
 
 
-app.use("/rooms",roomsRoute);
-app.use("/users/",userRoute);   
-app.use("/bookings/",bookingRoute);
+app.use("/rooms", roomsRoute);
+app.use("/users/", userRoute);
+app.use("/bookings/", bookingRoute);
 
 const port = process.env.PORT;
 
-app.listen(port,()=> console.log("server started using nodemon"));
+app.listen(port, () => console.log("server started using nodemon"));

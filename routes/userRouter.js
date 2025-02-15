@@ -8,9 +8,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const authMiddleware = require("../middleware/authMiddleware_verify");
 
-
 const JWT_SECRET = process.env.JWT_SECRET;
-
 
 router.post("/register", async (req, res) => {
 
@@ -90,6 +88,22 @@ router.get("/getallusers", async (req, res) => {
     }
 });
 
+router.post("/updatepassword/:id", async (req, res) => {
+    const { password } = req.body;
+    const id = req.params.id;
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    try {
+        const user = await User.findByIdAndUpdate(id, { password: hashedPassword }, { new: true });
+        if (user) {
+            res.send({ message: "Request submitted successfully", status: 200 });
+        }
+    } catch (error) {
+        return res.status(400).json({ error });
+    }
+
+})
+
 
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;  // Replace with your actual client secret
@@ -119,23 +133,34 @@ router.post("/googlesign", async (req, res) => {
 
         const payload = ticket.getPayload();  // This contains user data
 
-        let user = await User.findOne({ email: payload.email });
+        const userExist = await User.findOne({ email: payload.email });
 
-        const token = jwt.sign({ _id: user._id, isAdmin: user.isAdmin }, JWT_SECRET, { expiresIn: "1h" });
-        if (user) {
-          return res.send(token);
-
+        if (userExist) {
+            const token = jwt.sign(
+                { _id: userExist._id, isAdmin: userExist.isAdmin },
+                JWT_SECRET,
+                { expiresIn: "1h" }
+            );
+            return res.send(token);
         }
         else {
-            const user = new User({
+            const hashedPassword = await bcrypt.hash(payload.sub, 10);
+            const newUser = new User({
                 name: payload.name,
                 email: payload.email,
-                password: "1234",
+                password: hashedPassword // Generate a random password
             });
-            user.save();
-            res.send(token);
-        }
 
+            await newUser.save(); // Await user creation
+
+            const newtoken = jwt.sign(
+                { _id: newUser._id, isAdmin: newUser.isAdmin },
+                JWT_SECRET,
+                { expiresIn: "1h" }
+            );
+
+            return res.send(newtoken); // Send token in response
+        }
     } catch (error) {
         console.error("Error during Google login:", error);
         res.status(500).send("Something went wrong.");

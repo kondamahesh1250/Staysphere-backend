@@ -30,7 +30,7 @@ const roomSchema = mongoose.Schema(
             type: Object,
             required: true
         },
-        location:{
+        location: {
             type: Object,
             required: true
         },

@@ -57,7 +57,7 @@ router.put("/update/:id", async (req, res) => {
 router.delete("/delete/:id", async (req, res) => {
     try {
         const { id } = req.params;
-        const room = await Room.findByIdAndDelete(id);
+        await Room.findByIdAndDelete(id);
         res.send("Room Deleted");
     } catch (error) {
         res.status(400).send({ message: error.message });
