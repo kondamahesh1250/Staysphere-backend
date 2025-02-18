@@ -8,7 +8,6 @@ const { v4: uuidv4 } = require('uuid');
 const Stripe = require('stripe');
 const stripe = new Stripe(process.env.STRIPE_KEY);
 
-
 router.post("/bookroom", async (req, res) => {
     const {
         rooms,
