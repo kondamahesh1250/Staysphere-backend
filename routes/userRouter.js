@@ -107,7 +107,7 @@ router.post("/updatepassword/:id", async (req, res) => {
 
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;  // Replace with your actual client secret
-const REDIRECT_URI = "https://staysphere-iota.vercel.app"; // This should match the one in Google Developer Console
+const REDIRECT_URI = process.env.REDIRECT_URI; // This should match the one in Google Developer Console
 
 const client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
 
