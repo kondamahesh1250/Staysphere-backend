@@ -107,9 +107,9 @@ router.post("/updatepassword/:id", async (req, res) => {
 
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;  // Replace with your actual client secret
-const REDIRECT_URI = "http://localhost:3000"; // This should match the one in Google Developer Console
+// const REDIRECT_URI = "http://localhost:3000"; // This should match the one in Google Developer Console
 
-const client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
+const client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET);
 
 router.post("/googlesign", async (req, res) => {
     const { code } = req.body;
@@ -118,7 +118,7 @@ router.post("/googlesign", async (req, res) => {
         const { data } = await axios.post("https://oauth2.googleapis.com/token", {
             client_id: CLIENT_ID,
             client_secret: CLIENT_SECRET,
-            redirect_uri: REDIRECT_URI,
+            // redirect_uri: REDIRECT_URI,
             grant_type: "authorization_code",
             code,
         });
